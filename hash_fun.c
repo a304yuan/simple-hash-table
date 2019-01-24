@@ -3,12 +3,12 @@
 /* FNV 1a 64-bit Hash */
 
 size_t fnv_hash64(const void *key, size_t len) {
-    uint64_t h = 0xcbf29ce484222325u;
+    uint64_t h = 0xcbf29ce484222325ul;
     const unsigned char *k = key;
 
     for(size_t i = 0; i < len; i++) {
         h ^= k[i];
-        h *= 0x100000001b3u;
+        h *= 0x100000001b3ul;
     }
 
     return (size_t)h;
