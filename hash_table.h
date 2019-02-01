@@ -14,6 +14,8 @@ struct hash_node {
     any key;           //!< key
     any value;         //!< value
     hash_node * next;   //!< Pointer to next node
+    hash_node * order_prev;
+    hash_node * order_next;
 };
 
 struct hash_table {
@@ -22,6 +24,7 @@ struct hash_table {
     size_t (*hash_fun)(const void *, size_t);  //!< Pointer to a hash function
     int (*compare)(const void *, const void *);
     hash_node ** array[2];    //!< [0] Currently used array of node pointers [1] Expanded array of node pointers
+    hash_node * last;
 };
 
 extern hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const void *, size_t), int (*compare)(const void *, const void *));

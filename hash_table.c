@@ -9,6 +9,7 @@ hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const void *, si
     table->nodes = 0;
     table->hash_fun = hash_fun;
     table->compare = compare;
+    table->last = NULL;
 
     return table;
 }
@@ -119,7 +120,15 @@ hash_node * hash_table_insert(hash_table * table, const any key, const any value
 		node = *p;
 	}
 	else {
-		*p = hash_node_new(table, &key, &value);
+        node = hash_node_new(table, &key, &value);
+        // maintain order of insertion
+        hash_node * last = table->last;
+        if (last) {
+            last->order_next = node;
+        }
+        node->order_prev = last;
+        table->last = node;
+		*p = node;
 		table->nodes++;
 	}
     // expand if is full
@@ -140,6 +149,16 @@ void hash_table_delete(hash_table * table, const any key) {
 	if (*p) {
 		hash_node * del = *p;
 		*p = (*p)->next;
+        // maintain order of insertion
+        if (del != table->last) {
+            del->order_next->order_prev = del->order_prev;
+        }
+        else {
+            table->last = NULL;
+        }
+        if (del->order_prev) {
+            del->order_prev->order_next = del->order_next;
+        }
 		hash_node_free(del);
 		table->nodes--;
 	}
