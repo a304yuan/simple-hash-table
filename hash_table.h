@@ -3,10 +3,12 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "any.h"
 
 typedef struct hash_node hash_node;
 typedef struct hash_table hash_table;
+typedef struct hash_table_iter hash_table_iter;
 
 struct hash_node {
     size_t hash;       //!< Hash value
@@ -26,6 +28,24 @@ struct hash_table {
     hash_node ** array[2];    //!< [0] Currently used array of node pointers [1] Expanded array of node pointers
     hash_node * last;
 };
+
+struct hash_table_iter {
+    hash_node * next;
+};
+
+static inline void hash_table_iter_init(const hash_table * table, hash_table_iter * iter) {
+    iter->next = table->last;
+}
+
+static inline bool hash_table_iter_has(const hash_table_iter * iter) {
+    return iter->next != NULL;
+}
+
+static inline hash_node * hash_table_iter_next(hash_table_iter * iter) {
+    hash_node * n = iter->next;
+    iter->next = n->order_prev;
+    return n;
+}
 
 extern hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const void *, size_t), int (*compare)(const void *, const void *));
 extern void hash_table_free(hash_table * table);
