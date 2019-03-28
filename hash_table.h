@@ -23,8 +23,8 @@ struct hash_node {
 struct hash_table {
     size_t slots[2];         //!< Number of slots
     size_t nodes;            //!< Number of nodes
-    size_t (*hash_fun)(const void *, size_t);  //!< Pointer to a hash function
-    int (*compare)(const void *, const void *);
+    size_t (*hash_fun)(const any *);  //!< Pointer to a hash function
+    int (*compare)(const any *, const any *);
     hash_node ** array[2];    //!< [0] Currently used array of node pointers [1] Expanded array of node pointers
     hash_node * last;
 };
@@ -47,7 +47,7 @@ static inline hash_node * hash_table_iter_next(hash_table_iter * iter) {
     return n;
 }
 
-extern hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const void *, size_t), int (*compare)(const void *, const void *));
+extern hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const any *), int (*compare)(const any *, const any *));
 extern void hash_table_free(hash_table * table);
 extern hash_node * hash_table_insert(hash_table * table, const any key, const any value);
 extern void hash_table_delete(hash_table * table, const any key);

@@ -1,6 +1,6 @@
 #include "hash_table.h"
 
-hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const void *, size_t), int (*compare)(const void *, const void *)) {
+hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const any *), int (*compare)(const any *, const any *)) {
     hash_table * table = malloc(sizeof(hash_table));
     table->array[0] = malloc(sizeof(hash_node *) * capacity);
     memset(table->array[0], 0, sizeof(hash_node *) * capacity);
@@ -16,7 +16,7 @@ hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const void *, si
 
 static hash_node * hash_node_new(const hash_table * table, const any * key, const any * value) {
 	hash_node * node = malloc(sizeof(hash_node));
-	node->hash = table->hash_fun(any_get_ref(key), any_size(key));
+	node->hash = table->hash_fun(key);
 	node->count = 1;
     node->next = NULL;
 	node->key = *key;
@@ -60,7 +60,7 @@ static void hash_table_expand(hash_table * table) {
 }
 
 static hash_node ** hash_table_find_place(const hash_table * table, const any * key) {
-	size_t hash = table->hash_fun(any_get_ref(key), any_size(key));
+	size_t hash = table->hash_fun(key);
 	int arrs = table->array[1] ? 2 : 1;
 	hash_node ** p = NULL;
 
@@ -69,7 +69,7 @@ static hash_node ** hash_table_find_place(const hash_table * table, const any * 
 		p = &table->array[i][index];
 
         while (*p) {
-            if ((*p)->hash == hash && table->compare(any_get_ref(key), any_get_ref(&(*p)->key)) == 0) {
+            if ((*p)->hash == hash && table->compare(key, &(*p)->key) == 0) {
                 return p;
             }
             else {
