@@ -48,7 +48,7 @@ static inline hash_node * hash_table_iter_next(hash_table_iter * iter) {
 }
 
 extern hash_table * hash_table_new(size_t capacity, size_t (*hash_fun)(const any *), int (*compare)(const any *, const any *));
-extern void hash_table_free(hash_table * table);
+extern void hash_table_free(hash_table * table, void (*deallocator)(any * key, any * value));
 extern hash_node * hash_table_insert(hash_table * table, const any key, const any value);
 extern void hash_table_delete(hash_table * table, const any key);
 extern hash_node * hash_table_find(const hash_table * table, const any key);

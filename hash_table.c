@@ -29,7 +29,7 @@ static void hash_node_free(hash_node * node) {
     free(node);
 }
 
-void hash_table_free(hash_table * table) {
+void hash_table_free(hash_table * table, void (*deallocator)(any * key, any * value)) {
 	hash_node * cur, * next;
 	int arrs = table->array[1] ? 2 : 1;
 
@@ -38,6 +38,9 @@ void hash_table_free(hash_table * table) {
 			cur = table->array[i][j];
 			while (cur) {
 				next = cur->next;
+                if (deallocator) {
+                    deallocator(&cur->key, &cur->value);
+                }
 				hash_node_free(cur);
 				cur = next;
 			}
