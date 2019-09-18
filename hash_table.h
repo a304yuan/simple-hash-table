@@ -52,6 +52,6 @@ extern void hash_table_free(hash_table * table);
 extern hash_node * hash_table_insert(hash_table * table, const any key, const any value);
 extern void hash_table_delete(hash_table * table, const any key);
 extern hash_node * hash_table_find(const hash_table * table, const any key);
-extern any * hash_table_get_val(const hash_table * table, const any key);
+extern any hash_table_get(const hash_table * table, const any key);
 
 #endif // HASH_TABLE_H

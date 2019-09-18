@@ -168,13 +168,13 @@ hash_node * hash_table_find(const hash_table * table, const any key) {
 	return *hash_table_find_place(table, &key);
 }
 
-any * hash_table_get_val(const hash_table * table, const any key) {
+any hash_table_get(const hash_table * table, const any key) {
 	hash_node ** node = hash_table_find_place(table, &key);
 
 	if (*node) {
-        return &(*node)->value;
+        return (*node)->value;
     }
 	else {
-        return NULL;
+        return ANY_NONE;
     }
 }
